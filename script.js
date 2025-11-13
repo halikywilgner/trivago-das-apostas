@@ -1,29 +1,25 @@
-const apiUrl = "https://trivago-das-apostas-1.onrender.com/api/odds"; // seu servidor Render
-
 async function carregarOdds() {
-  const container = document.getElementById("odds");
-  container.innerHTML = "<p>Carregando odds de futebol...</p>";
-
   try {
-    const resposta = await fetch(apiUrl);
-    const dados = await resposta.json();
-
+    const res = await fetch("https://trivago-das-apostas-1.onrender.com");
+    const data = await res.json();
+    const container = document.getElementById("odds");
     container.innerHTML = "";
-    dados.forEach(jogo => {
-      const item = document.createElement("div");
-      item.className = "jogo";
-      item.innerHTML = `
-        <h3>${jogo.sport_title || "Futebol"}</h3>
-        <p><strong>${jogo.home_team}</strong> vs <strong>${jogo.away_team}</strong></p>
-        <p>Melhor odd: ${jogo.bookmakers[0]?.title || "N/A"} — 
-        ${jogo.bookmakers[0]?.markets[0]?.outcomes[0]?.price || "?"}</p>
-        <hr/>
+
+    data.forEach(jogo => {
+      const div = document.createElement("div");
+      div.className = "card";
+      div.innerHTML = `
+        <h3>${jogo.time1} vs ${jogo.time2}</h3>
+        <p><b>Melhor Odd:</b> ${jogo.melhorCasa} (${jogo.melhorOdd})</p>
+        <button onclick="window.open('${jogo.link}', '_blank')">
+          Abrir ${jogo.melhorCasa}
+        </button>
       `;
-      container.appendChild(item);
+      container.appendChild(div);
     });
-  } catch (erro) {
-    container.innerHTML = "<p>Erro ao carregar odds 😞</p>";
-    console.error(erro);
+  } catch (error) {
+    console.error("Erro ao carregar odds:", error);
+    document.getElementById("odds").innerHTML = "<p>Erro ao carregar dados.</p>";
   }
 }
 
