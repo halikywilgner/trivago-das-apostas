@@ -1,6 +1,6 @@
-import express from "express";
-import fetch from "node-fetch";
-import cors from "cors";
+const express = require("express");
+const fetch = require("node-fetch");
+const cors = require("cors");
 
 const app = express();
 app.use(cors());
@@ -15,13 +15,12 @@ app.get("/odds", async (req, res) => {
   try {
     const response = await fetch("https://api.the-odds-api.com/v4/sports/soccer/odds", {
       headers: {
-        "x-api-key": process.env.ODDS_API_KEY // sua chave da OddsAPI
+        "x-api-key": process.env.ODDS_API_KEY || "70787e7c4f2555b6400d31f41af13ae0"
       }
     });
 
     const data = await response.json();
 
-    // Simplificar os dados: mostrar apenas odds principais
     const results = data.map(match => ({
       jogo: `${match.home_team} vs ${match.away_team}`,
       horario: match.commence_time,
@@ -41,4 +40,5 @@ app.get("/odds", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log(`✅ Servidor rodando em http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`✅ Servidor rodando na porta ${PORT}`));
+
