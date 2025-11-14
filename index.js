@@ -15,7 +15,7 @@ app.get("/odds", async (req, res) => {
   try {
     const response = await fetch("https://api.the-odds-api.com/v4/sports/soccer/odds", {
       headers: {
-        "x-api-key": process.env.ODDS_API_KEY || "70787e7c4f2555b6400d31f41af13ae0"
+        "x-api-key": "70787e7c4f2555b6400d31f41af13ae0" // sua chave
       }
     });
 
@@ -40,5 +40,4 @@ app.get("/odds", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log(`✅ Servidor rodando na porta ${PORT}`));
-
+app.listen(PORT, () => console.log(`🚀 Servidor rodando na porta ${PORT}`));
