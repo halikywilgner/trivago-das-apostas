@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
 
 app.get("/odds", async (req, res) => {
   try {
-    const url = "https://api.the-odds-api.com/v4/sports/soccer_brazil_campeonato/odds?apiKey=" + API_KEY + "&regions=br&markets=h2h";
+    const url = `https://api.the-odds-api.com/v4/sports/soccer/odds/?regions=eu&markets=h2h&apiKey=${API_KEY}`;
 
     const resposta = await fetch(url);
     const dados = await resposta.json();
