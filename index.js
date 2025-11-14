@@ -7,31 +7,34 @@ app.use(cors());
 
 const PORT = process.env.PORT || 3000;
 
+// AGORA A CHAVE VEM DO RENDER (Environment Variables)
+const API_KEY = process.env.ODDS_API_KEY;
+
 const bookies = ["bet365", "betano", "1xbet", "pinnacle", "betfair", "stake"];
 
+// ROTA PRINCIPAL
 app.get("/", (req, res) => {
-  res.send("🔥 API Trivago das Apostas funcionando! Use /odds");
+  res.send("🔥 API Trivago de Apostas está online! Use /odds");
 });
 
+// ROTA DE ODDS
 app.get("/odds", async (req, res) => {
   try {
-    const url =
-      "https://api.the-odds-api.com/v4/sports/soccer_brazil_campeonato/odds" +
-      "?regions=eu&markets=h2h&oddsFormat=decimal";
+    if (!API_KEY) {
+      return res.status(500).json({ erro: "API_KEY não configurada no Render" });
+    }
 
-    const response = await fetch(url, {
-      headers: { "x-api-key": "70787e7c4f2555b6400d31f41af13ae0" }
+    const response = await fetch("https://api.the-odds-api.com/v4/sports/soccer/odds", {
+      headers: {
+        "x-api-key": API_KEY
+      }
     });
 
     if (!response.ok) {
-      throw new Error("API retornou status " + response.status);
+      return res.status(500).json({ erro: "Falha ao buscar odds da API" });
     }
 
     const data = await response.json();
-
-    if (!Array.isArray(data)) {
-      throw new Error("Formato inesperado recebido da API");
-    }
 
     const results = data.map(match => ({
       jogo: `${match.home_team} vs ${match.away_team}`,
@@ -40,19 +43,16 @@ app.get("/odds", async (req, res) => {
         .filter(b => bookies.includes(b.key))
         .map(b => ({
           casa: b.key,
-          home:
-            b.markets?.[0]?.outcomes?.find(o => o.name === match.home_team)
-              ?.price || "-",
-          away:
-            b.markets?.[0]?.outcomes?.find(o => o.name === match.away_team)
-              ?.price || "-"
+          home: b.markets?.[0]?.outcomes?.[0]?.price || "-",
+          away: b.markets?.[0]?.outcomes?.[1]?.price || "-"
         }))
     }));
 
     res.json(results);
+
   } catch (err) {
     console.error("ERRO NO BACKEND:", err);
-    res.status(500).json({ erro: "Erro ao buscar odds da API" });
+    res.status(500).json({ erro: "Erro interno no servidor" });
   }
 });
 
