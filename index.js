@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const fetch = require("node-fetch");
 
 const app = express();
 app.use(cors());
@@ -39,4 +40,3 @@ app.get("/odds", async (req, res) => {
 });
 
 app.listen(PORT, () => console.log(`🚀 Servidor rodando na porta ${PORT}`));
-
