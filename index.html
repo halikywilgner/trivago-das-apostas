@@ -1,46 +1,91 @@
-async function carregarOdds() {
-  try {
-    const res = await fetch("https://trivago-das-apostas-1.onrender.com/odds");
-    const data = await res.json();
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trivago das Apostas ⚽</title>
 
-    const container = document.getElementById("odds");
-    container.innerHTML = "";
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #000;
+      color: #ffd700;
+      text-align: center;
+    }
 
-    data.forEach(jogo => {
-      const div = document.createElement("div");
-      div.className = "card";
+    h1 {
+      font-size: 32px;
+      margin-bottom: 5px;
+      text-shadow: 0 0 10px #ffd700aa;
+    }
 
-      let htmlOdds = "";
+    .subtitle {
+      opacity: 0.7;
+      margin-bottom: 20px;
+    }
 
-      jogo.odds.forEach(o => {
-        htmlOdds += `
-          <div style="
-            padding: 8px;
-            background: #222;
-            margin-top: 8px;
-            border-radius: 6px;
-          ">
-            <b style="color:#ffd700">${o.casa.toUpperCase()}</b><br>
-            🏠 Home: <b>${o.home}</b><br>
-            🚶 Away: <b>${o.away}</b>
-          </div>
-        `;
-      });
+    #loader {
+      margin-top: 50px;
+      font-size: 20px;
+      animation: piscar 1.2s infinite;
+    }
 
-      div.innerHTML = `
-        <h3>${jogo.jogo}</h3>
-        <p><b>Horário:</b> ${jogo.horario}</p>
-        ${htmlOdds}
-      `;
+    @keyframes piscar {
+      50% { opacity: 0.3; }
+    }
 
-      container.appendChild(div);
-    });
-  } catch (error) {
-    console.error("Erro ao carregar odds:", error);
-    document.getElementById("odds").innerHTML =
-      "<p>Erro ao carregar odds. Tente novamente.</p>";
-  }
-}
+    .card {
+      background: linear-gradient(135deg, #111, #1a1a1a);
+      border: 1px solid #ffd70055;
+      border-radius: 14px;
+      padding: 18px;
+      margin: 20px auto;
+      width: 92%;
+      max-width: 650px;
+      box-shadow: 0 0 18px #ffd70022;
+      transition: 0.25s;
+    }
 
-carregarOdds();
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 25px #ffd70055;
+    }
+
+    .oddsBox {
+      background: #222;
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 10px;
+      border: 1px solid #ffd70044;
+      text-align: left;
+    }
+
+    .bookieLogo {
+      height: 22px;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+
+    .oddValue {
+      font-weight: bold;
+      color: #00ffb7;
+      text-shadow: 0 0 4px #00ffb777;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>⚽ Trivago das Apostas</h1>
+  <p class="subtitle">Comparador de odds em tempo real</p>
+
+  <div id="loader">Carregando odds...</div>
+  <div id="odds"></div>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
 
